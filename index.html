@@ -8,18 +8,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
     <script src="leaflet.ajax.min.js"></script>
-    <script src="ajax.js"></script>
+  
+
+    <script	 src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.css" />
     <script src="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
-
+    <script src = "https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"> </script>
     <link href="https://fonts.googleapis.com/css?family=Bungee+Shade|Roboto:400" rel="stylesheet">
+
+    <script src = "geoson.js" > </script>
+    <link rel= "stylesheet"  src= "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"> 
+    <link rel = "stylesheet" src= "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"> 
 
 </head>
 
@@ -80,6 +85,7 @@
                 'Imagery © <a href="https://mapbox.com">Mapbox</a>',
             id: 'mapbox.run-bike-hike'
         }).addTo(mymap);
+        /*
         function popUp(f, l) {
             var out = [];
             if (f.properties) {
@@ -89,15 +95,29 @@
                 l.bindPopup(out.join("<br />"));
             }
         }
-        var geojsonLayer = new L.GeoJSON.AJAX(["ata_schoolsJSON.json"], {
-            onEachFeature: popUp
-        }).addTo(mymap);
-        var lc = L.control.locate({
-            position: 'topleft',
-            circleStyle: {
-                radius: 1,
-            },
-        }).addTo(mymap);
+ */
+      
+
+// Add layer for markercluster
+var markers = L.markerClusterGroup();
+
+var icon = new L.Icon({iconUrl:'icon.png'})
+
+// Use jQuery to load date from GeoJSON file
+$.getJSON('ATA_schools.geojson', function(data) {
+  var geoJsonLayer = L.geoJson(data, {
+    onEachFeature: function(feature, layer){
+        layer.setIcon(icon);
+    }
+  });
+  // Add geoJsonLayer to markercluster group
+  markers.addLayer(geoJsonLayer);
+  // Add the markercluster gropu to the map
+  mymap.addLayer(markers);
+});
+
+	
+
     </script>
 
 
